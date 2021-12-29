@@ -1,7 +1,8 @@
 from airflow import DAG
 from datetime import datetime, timedelta
-from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow import configuration as conf
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+
 
 default_args = {
     'owner': 'airflow',
@@ -43,5 +44,5 @@ with dag:
         cluster_context='docker-for-desktop', # is ignored when in_cluster is set to True
         config_file=config_file,
         resources=compute_resource,
-        is_delete_pod_operator=True,
+        # is_delete_pod_operator=True,
         get_logs=True)
