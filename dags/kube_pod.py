@@ -1,6 +1,9 @@
+from time import sleep
+
 from airflow import DAG
 from datetime import datetime, timedelta
 from airflow import configuration as conf
+from airflow.operators.python import PythonOperator
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 
 
@@ -33,6 +36,12 @@ dag = DAG('example_kubernetes_pod',
 
 compute_resource = {'request_cpu': '200m', 'request_memory': '1Gi', 'limit_cpu': '200m', 'limit_memory': '1Gi'}
 
+
+def lol():
+    sleep(5)
+    print("kek")
+
+
 with dag:
     k = KubernetesPodOperator(
         namespace=namespace,
@@ -46,3 +55,9 @@ with dag:
         resources=compute_resource,
         is_delete_operator_pod=True,
         get_logs=True)
+
+    t1 = PythonOperator(
+        task_id='python_function_sleep_lol',
+        python_callable=lol,
+        dag=dag,
+    )
